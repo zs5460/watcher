@@ -21,6 +21,14 @@ func New(fn string, call func()) (*watcher, error) {
 	return &watcher{filename: fn, onChange: call}, nil
 }
 
+func Must(fn string, call func()) *watcher {
+	w, err := New(fn, call)
+	if err != nil {
+		panic(err)
+	}
+	return w
+}
+
 func (wc *watcher) watch() {
 	info, _ := os.Stat(wc.filename)
 	lastModTime := info.ModTime()

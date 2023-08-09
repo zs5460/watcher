@@ -8,33 +8,36 @@ Package watcher implements a simple file monitor that calls a callback function 
 package main
 
 import (
-	"fmt"
-	"log"
+ "fmt"
+ "log"
 
-	"github.com/zs5460/jmc"
-	"github.com/zs5460/watcher"
+ "github.com/zs5460/jmc"
+ "github.com/zs5460/watcher"
 )
 
 type config struct {
-	Listen  string
-	Version string
+ Listen  string
+ Version string
 }
 
 var cfg config
 
 func main() {
-	w, err := watcher.New("config.json", loadConfig)
-	if err != nil {
-		log.Fatal(err)
-	}
-	w.Start()
+ w, err := watcher.New("config.json", loadConfig)
+ if err != nil {
+  log.Fatal(err)
+ }
+ w.Start()
 
-	<-make(chan struct{})
+ // or use Must
+ watcher.Must("config.json", loadConfig).Start()
+
+ <-make(chan struct{})
 }
 
 func loadConfig() {
-	jmc.MustLoadConfig("config.json", &cfg)
-	fmt.Printf("%#v\n", cfg)
+ jmc.MustLoadConfig("config.json", &cfg)
+ fmt.Printf("%#v\n", cfg)
 }
 
 ```
